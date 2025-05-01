@@ -4,6 +4,32 @@ import './App.css'
 
 export default function App() {
   const synth = new Tone.Synth().toDestination()
+  const kick = new Tone.MembraneSynth({
+    pitchDecay: 0.05,
+    octaves: 4,
+    oscillator: {
+      type: "sine"
+    },
+    envelope: {
+      attack: 0.001,
+      decay: 0.2,
+      sustain: 0.01,
+      release: 1.2,
+      attackCurve: "exponential"
+    }
+  }).toDestination();
+
+  const snare = new Tone.NoiseSynth({
+    noise: {
+      type: "white"
+    },
+    envelope: {
+      attack: 0.001,
+      decay: 0.2,
+      sustain: 0.01,
+      release: 0.2
+    }
+  }).toDestination();
 
   const handleClick = async () => {
     await Tone.start()           // オーディオコンテキストを解放
@@ -19,11 +45,21 @@ export default function App() {
     await Tone.start()
     newSynth.triggerAttackRelease('G4', '8n')
   }
+
+  const handleKick = async () => {
+    await Tone.start()
+    kick.triggerAttackRelease("C1", "8n")
+  }
+
+  const handleSnare = async () => {
+    await Tone.start()
+    snare.triggerAttackRelease("8n")
+  }
  
   // 例：新しいシンセサイザーの追加
   const newSynth = new Tone.Synth({
     oscillator: {
-      type: "square"  // 波形の種類（sine, square, triangle, sawtooth）
+      type: "sine"  // 波形の種類（sine, square, triangle, sawtooth）
     },
     envelope: {
       attack: 0.1,  // アタック時間
@@ -54,6 +90,18 @@ export default function App() {
         style={{ fontSize: '1.25rem', padding: '0.75rem 2rem', cursor: 'pointer' }}
       >
         Play New Synth
+      </button>
+      <button
+        onClick={handleKick}
+        style={{ fontSize: '1.25rem', padding: '0.75rem 2rem', cursor: 'pointer' }}
+      >
+        Kick
+      </button>
+      <button
+        onClick={handleSnare}
+        style={{ fontSize: '1.25rem', padding: '0.75rem 2rem', cursor: 'pointer' }}
+      >
+        Snare
       </button>
     </main>
   )
